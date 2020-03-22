@@ -77,21 +77,10 @@ function calculateIssues() {
     let sortedKeys = Object.keys(filteredTypes).sort();
 
     if (statusCell.querySelectorAll(".taskIcon").length < 1) {
-      statusCell.insertAdjacentHTML(
-        "beforeend",
+      let iconsLayers = `<div style="position: absolute">`;
 
-        `<style>
-        .ghx-column-headers .ghx-column {
-          padding: 4px 9px;
-          margin-bottom: 12px;
-        }
-        </style>
-        <br>`
-      );
-      sortedKeys.forEach(function(currentType) {
-        statusCell.insertAdjacentHTML(
-          "beforeend",
-          `<span class="taskIcon" style="white-space: nowrap"><span
+      iconsLayers = sortedKeys.reduce(function(accString, currentType) {
+        return (accString += `<span class="taskIcon" style="white-space: nowrap"><span
           style="display: inline-block;
                 color: #172b4d;
                 font-size: 10px;
@@ -115,9 +104,11 @@ function calculateIssues() {
               word-wrap: break-word;"
       >
         ${filteredTypes[currentType].count}
-      </span>`
-        );
-      });
+      </span>`);
+      }, iconsLayers);
+
+      iconsLayers += `</div>`;
+      statusCell.insertAdjacentHTML("beforeend", iconsLayers);
     }
   });
 }
