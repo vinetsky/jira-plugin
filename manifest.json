@@ -1,0 +1,17 @@
+{
+  "name": "Rostelecom jira hepler",
+  "icons": {
+    "128": "b2b.png"
+  },
+  "description": "Adds functioonality to kanban panel",
+  "version": "0.2",
+  "manifest_version": 2,
+
+  "content_scripts": [
+    {
+      "matches": ["https://*.rt.ru/*"],
+      "js": ["show.js"],
+      "run_at": "document_end"
+    }
+  ]
+}
