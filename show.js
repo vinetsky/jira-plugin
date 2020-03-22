@@ -1,3 +1,19 @@
+let headsCahnge = new MutationObserver(function() {
+  if (
+    document.getElementById("ghx-column-headers") &&
+    document.querySelectorAll(".ghx-columns")
+  ) {
+    console.log("heads change");
+    this.disconnect();
+    calculateIssues();
+    this.observe(document, {
+      attributes: false,
+      childList: true,
+      subtree: true
+    });
+  }
+});
+
 let waitForHeaders = new MutationObserver(function() {
   if (
     document.getElementById("ghx-column-headers") &&
@@ -5,6 +21,12 @@ let waitForHeaders = new MutationObserver(function() {
   ) {
     this.disconnect();
     calculateIssues();
+
+    headsCahnge.observe(document, {
+      attributes: false,
+      childList: true,
+      subtree: true
+    });
   }
 });
 
@@ -54,27 +76,35 @@ function calculateIssues() {
 
     let sortedKeys = Object.keys(filteredTypes).sort();
 
-    document.getElementById("ghx-pool").style.cssText =
-      "display: block; padding-top: 200px;";
-
-    sortedKeys.forEach(function(currentType) {
+    if (statusCell.querySelectorAll(".taskIcon").length < 1) {
       statusCell.insertAdjacentHTML(
         "beforeend",
-        `<div style="padding-top: 3px">
-        <span
+
+        `<style>
+        .ghx-column-headers .ghx-column {
+          padding: 4px 9px;
+          margin-bottom: 12px;
+        }
+        </style>
+        <br>`
+      );
+      sortedKeys.forEach(function(currentType) {
+        statusCell.insertAdjacentHTML(
+          "beforeend",
+          `<span class="taskIcon" style="white-space: nowrap"><span
           style="display: inline-block;
                 color: #172b4d;
                 font-size: 10px;
                 font-weight: bold;
                 line-height: 1.5;
                 font-weight: normal;
-                margin: 0 5px 0 0;
+                margin: 0 1px 0 0;
                 word-wrap: break-word;
                 vertical-align: bottom;"
         >
           <img src="${filteredTypes[currentType].img}" />
         </span>
-        <span
+        <span class="taskCount"
         style="display: inline-block;
               color: #172b4d;
               font-size: 14px;
@@ -85,22 +115,9 @@ function calculateIssues() {
               word-wrap: break-word;"
       >
         ${filteredTypes[currentType].count}
-      </span>
-
-      <span
-          style="display: inline-block;
-                color: #172b4d;
-                font-size: 14px;
-                font-weight: bold;
-                line-height: 1.1;
-                font-weight: normal;
-                margin: 0 5px 0 0;
-                word-wrap: break-word;"
-        >
-          ${currentType}
-        </span>
-      </div>`
-      );
-    });
+      </span>`
+        );
+      });
+    }
   });
 }
